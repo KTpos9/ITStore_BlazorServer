@@ -1,0 +1,29 @@
+﻿<li style="list-style: none;">
+  <article style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
+    <a href="@aHref" style="text-decoration: none;">
+      <div class="card">
+        <img src="@src" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">@title</h5>
+          <p class="card-text">@desc</p>
+          <a href="@btnHref" class="btn btn-primary">@btnText</a>
+        </div>
+      </div>
+    </a>
+  </article>
+</li>
+
+@code {
+    [Parameter]
+    public string src { get; set; }
+    [Parameter]
+    public string title{ get; set; }
+    [Parameter]
+    public string desc{ get; set; }
+    [Parameter]
+    public string btnText{ get; set; }
+    [Parameter]
+    public string btnHref{ get; set; }
+    [Parameter]
+    public string aHref{ get; set;}
+}
