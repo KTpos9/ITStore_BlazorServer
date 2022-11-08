@@ -1,5 +1,6 @@
 using DataAccess;
 using DataAccess.Data;
+using MatBlazor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Web_Project.Data;
@@ -12,6 +13,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<SqlDataAccess>();
 builder.Services.AddTransient<MemberData>();
+builder.Services.AddMatBlazor();
 
 var app = builder.Build();
 
