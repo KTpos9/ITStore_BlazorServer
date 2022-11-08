@@ -4,3 +4,6 @@ section{
     align-content: center;
     min-height: 100vh;
 }
+form {
+    width: 22rem;
+}
