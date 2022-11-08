@@ -1,0 +1,42 @@
+﻿@page "/register"
+
+@inject MemberData _db
+
+<PageTitle>Register</PageTitle>
+
+<section>
+    <EditForm Model="@newMember" OnValidSubmit="@InsertMember" style="width:22rem">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+      <!-- Email input -->
+      @*<div class="form-outline mb-4">
+        <input type="email" id="form2Example1" class="form-control" />
+        <label class="form-label" for="form2Example1">Email address</label>
+      </div>*@
+      <MatTextField @bind-Value="@newMember.Email" Label="Email" FullWidth="true" Class="mb-4 mt-4"></MatTextField>
+
+      <!-- Password input -->
+      @*<div class="form-outline mb-4">
+        <input type="password" id="form2Example2" class="form-control" />
+        <label class="form-label" for="form2Example2">Password</label>
+      </div>*@
+      <MatTextField @bind-Value="@newMember.Password" Label="Password" FullWidth="true" Class="mb-4 mt-4" Type="password"></MatTextField>
+      <MatTextField @bind-Value="@newMember.ConfirmPassword" Label="Confirm Password" FullWidth="true" Class="mb-4" Type="password"></MatTextField>
+
+      <!-- Submit button -->
+      <button type="button" class="btn btn-primary btn-block mb-4">Sign in</button>
+    </EditForm>
+</section>
+@code {
+    private string Email;
+    private DisplayMemberModel newMember = new DisplayMemberModel();
+
+    private async Task InsertMember()
+    {
+        Member m = new Member
+        {
+
+        };
+        await _db.InsertMember(m);
+    }
+}
