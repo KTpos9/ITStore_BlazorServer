@@ -13,6 +13,7 @@ namespace DataAccess
         {
             _config = config;
         }
+        //retrive data from the database
         public async Task<List<T>> LoadData<T, U>(string sql, U parameter)
         {
             string connectionString = _config.GetConnectionString(ConnectionStringName);
@@ -22,6 +23,7 @@ namespace DataAccess
                 return data.ToList();
             }
         }
+        //save data to the database
         public async Task SaveData<T>(string sql, T parameter)
         {
             string connectionString = _config.GetConnectionString(ConnectionStringName);
