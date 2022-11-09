@@ -21,8 +21,8 @@ namespace DataAccess.Data
         }
         public Task InsertMember(Product product)
         {
-            string sql = @"insert into dbo.Product () 
-                          values (@,);";
+            string sql = @"insert into dbo.Product2 (ProductImg, ProductName, ProductDesc, ProductPrice) 
+                          values (@ProductImg, @ProductName, @ProductDesc, @ProductPrice);";
             return _db.SaveData(sql, product);
         }
     }
