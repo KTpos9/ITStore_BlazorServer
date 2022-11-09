@@ -1,14 +1,24 @@
 ﻿@page "/shop"
+@inject ProductData _db
 
 <PageTitle>Shop</PageTitle>
 <h3>Shop</h3>
 
 <main class="container">
   <ul class="grid_container">
+@*        @foreach(var product in products)
+        {
+            <ProductCard src="@product.ProductImg" 
+            title="@product.ProiductName" 
+            desc="@product.ProductDesc"
+            btnText="@Convert.ToString(product.ProductPrice)" 
+            btnHref="counter"
+            aHref="counter"></ProductCard>
+        }*@
     <ProductCard src="https://www.jib.co.th/img_master/product/original/2019102110373535557_1.jpg" 
     title="Card title" 
     desc="Some quick example text to build on the card title and make up the bulk of the card's content."
-    btnText="Go somewhere" 
+    btnText="Price" 
     btnHref="counter"
     aHref="counter"></ProductCard>
 
@@ -102,5 +112,9 @@ desc="Some quick example text to build on the card title and make up the bulk of
 btnText="Go somewhere" 
 btnHref="counter"></ProductCard> *@
 @code {
-
+    private List<Product> products;
+    protected override async Task OnInitializedAsync()
+    {
+        products = await _db.GetProduct();
+    }
 }
