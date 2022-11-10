@@ -16,7 +16,7 @@ namespace DataAccess.Data
         }
         public Task<List<Product>> GetProduct()
         {
-            string sql = "select * from dbo.Product";
+            string sql = "select * from dbo.Product2";
             return _db.LoadData<Product, dynamic>(sql, new { });
         }
         public Task InsertMember(Product product)
