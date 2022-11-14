@@ -1,19 +1,23 @@
-﻿<li style="list-style: none;">
+﻿@inject CartData _db
+
+<li style="list-style: none;">
   <article style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
-    <a href="@aHref" style="text-decoration: none;">
       <div class="card">
         <img src="@src" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title">@title</h5>
           <p class="card-text">@desc</p>
-          <a href="@btnHref" class="btn btn-primary">@btnText</a>
+          <p class="card-text">@btnText $</p>
+          <a href="@btnHref" class="btn btn-primary" @onclick="AddToCart">
+              <i class="oi oi-cart"></i>  Add to cart
+          </a>
         </div>
       </div>
-    </a>
   </article>
 </li>
 
 @code {
+    private DisplayCartModel cartItem = new DisplayCartModel();
     [Parameter]
     public string src { get; set; }
     [Parameter]
@@ -26,4 +30,13 @@
     public string btnHref{ get; set; }
     [Parameter]
     public string aHref{ get; set;}
+
+    private async Task AddToCart()
+    {
+        //Cart cart = new Cart
+        //{
+
+        //};
+        //await _db.InsertCart(cart);
+    }
 }

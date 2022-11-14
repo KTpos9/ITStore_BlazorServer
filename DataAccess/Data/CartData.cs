@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Data
 {
-    internal class CartData
+    public class CartData
     {
         private readonly SqlDataAccess _db;
         public CartData(SqlDataAccess db)
@@ -16,13 +16,13 @@ namespace DataAccess.Data
         }
         public Task<List<Cart>> GetCart()
         {
-            string sql = "select * from dbo.Member";
+            string sql = "select * from dbo.Cart2";
             return _db.LoadData<Cart, dynamic>(sql, new { });
         }
         public Task InsertCart(Cart cart)
         {
-            string sql = @"insert into dbo.Member () 
-                          values (@,);";
+            string sql = @"insert into dbo.Cart2 (ProductImg, ProductName, ProductPrice) 
+                          values (@ProductImg, @ProductName, @ProductPrice);";
             return _db.SaveData(sql, cart);
         }
     }

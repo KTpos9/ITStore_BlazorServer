@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Models
 {
-    internal class Cart
+    public class Cart
     {
+        public int CartID { get; set; }
+        public string ProductImg { get; set; }
+        public string ProductName { get; set; }
+        public float ProductPrice { get; set; }
     }
 }

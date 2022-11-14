@@ -14,6 +14,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<SqlDataAccess>();
 builder.Services.AddTransient<MemberData>();
 builder.Services.AddTransient<ProductData>();
+builder.Services.AddTransient<CartData>();
 builder.Services.AddMatBlazor();
 
 var app = builder.Build();

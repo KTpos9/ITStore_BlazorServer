@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,7 +38,11 @@ namespace DataAccess.Data
             return _db.SaveData(sql, product);
         }
 
-
-
+        public Task DeleteProduct(Product product)
+        {
+            string sql = @"delete from dbo.Product2 
+                          where ProductName = @ProductName";
+            return _db.SaveData(sql, product);
+        }
     }
 }
