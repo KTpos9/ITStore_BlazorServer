@@ -1,19 +1,64 @@
 ﻿@page "/cart"
+@layout ShopLayout
+@inject CartData _cartDb
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Picture</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
+<h1>Cart</h1>
+@if(cartItems is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="grid_wrapper">
 
-        </tbody>
-    </table>
+        <!---table-->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Picture</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var items in cartItems)
+                {
+                    <tr>
+                        <td style="width:20%">
+                            <img src="@items.ProductImg"class="w-50 img-thumbnail"><img/>
+                        </td>
+                        <td>@items.ProductName</td>
+                        <td>@items.ProductPrice</td>
+                        <td>0</td>
+                        <td><button class="btn btn-danger">Delete</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            <h2>Order Summary</h2>
+            <div class="summary_grid">
+                <ul class="text-decoration-none">
+                    <li>Total</li>
+                    <li>Discount</li>
+                    <li>Final price</li>
+                </ul>
+                <ul class="text-decoration-none">
+                    <li>@cartItems.Sum(item => item.ProductPrice)</li>
+                    <li>0</li>
+                    <li>@cartItems.Sum(item => item.ProductPrice)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
-
+    private List<DataAccess.Models.Cart> cartItems;
+    protected override async Task OnInitializedAsync()
+    {
+        cartItems = await _cartDb.GetCart();
+    }
 }

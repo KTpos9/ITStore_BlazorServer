@@ -1,0 +1,10 @@
+﻿.grid_wrapper{
+    display:grid;
+}
+.summary_grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+}
+li{
+    list-style-type:none;
+}
