@@ -1,11 +1,13 @@
 ﻿@page "/register"
 
 @inject MemberData _db
+@inject NavigationManager NavManager
 
 <PageTitle>Register</PageTitle>
 
 <section>
-    <EditForm Model="@newMember" OnValidSubmit="@InsertMember" style="width:22rem">
+    <h2>Register</h2>
+    <EditForm OnValidSubmit="@InsertMember" style="width:22rem" EditContext="@EC">
         <DataAnnotationsValidator />
         <ValidationSummary />
       <!-- Email input -->
@@ -13,24 +15,36 @@
         <input type="email" id="form2Example1" class="form-control" />
         <label class="form-label" for="form2Example1">Email address</label>
       </div>*@
-      <MatTextField @bind-Value="@newMember.Email" Label="Email" FullWidth="true" Class="mb-4 mt-4"></MatTextField>
+      <MatThemeProvider Theme=@theme1>
+            <MatTextField @bind-Value="@newMember.Email" Label="Email" FullWidth="true" Class="mb-4 mt-4"></MatTextField>
+            <MatTextField @bind-Value="@newMember.Password" Label="Password" FullWidth="true" Class="mb-4 mt-4" Type="password"></MatTextField>
+            <MatTextField @bind-Value="@newMember.ConfirmPassword" Label="Confirm Password" FullWidth="true" Class="mb-4" Type="password"></MatTextField>
+      </MatThemeProvider>
 
       <!-- Password input -->
       @*<div class="form-outline mb-4">
         <input type="password" id="form2Example2" class="form-control" />
         <label class="form-label" for="form2Example2">Password</label>
       </div>*@
-      <MatTextField @bind-Value="@newMember.Password" Label="Password" FullWidth="true" Class="mb-4 mt-4" Type="password"></MatTextField>
-      <MatTextField @bind-Value="@newMember.ConfirmPassword" Label="Confirm Password" FullWidth="true" Class="mb-4" Type="password"></MatTextField>
+      
 
       <!-- Submit button -->
-      <button type="button" class="btn btn-primary btn-block mb-4">Sign in</button>
+      <button type="submit" class="btn btn-primary btn-block mb-4" @onclick=SignIn disabled="@(!context.Validate())">Register</button>
     </EditForm>
 </section>
 @code {
+    private EditContext EC { get; set; }
     private string Email;
     private DisplayMemberModel newMember = new DisplayMemberModel();
-
+    MatTheme theme1 = new MatTheme
+    {
+        Primary = MatThemeColors.Blue.A400.Value
+    };
+    protected override Task OnInitializedAsync()
+    {
+        EC = new EditContext(newMember);
+        return base.OnInitializedAsync();
+    }
     private async Task InsertMember()
     {
         Member m = new Member
@@ -38,5 +52,12 @@
 
         };
         await _db.InsertMember(m);
+    }
+    private void SignIn()
+    {
+        if (EC.Validate())
+        {
+            NavManager.NavigateTo("/");
+        }
     }
 }
