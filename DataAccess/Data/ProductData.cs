@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +25,19 @@ namespace DataAccess.Data
                           values (@ProductImg, @ProductName, @ProductDesc, @ProductPrice);";
             return _db.SaveData(sql, product);
         }
+
+        public Task<List<Product>> GetProductById(int ProductId)
+        { 
+            string sql = @"select * from dbo.Product2 where ProductId=@Id";
+            return _db.LoadData<Product, dynamic>(sql, new {  Id=ProductId});
+        }
+
+        public Task UpdateProduct(Product product)
+        {
+            string sql = @"update dbo.Product2 set ProductImg=@ProductImg, ProductName=@ProductName, ProductDesc=@ProductDesc, ProductPrice=@ProductPrice where ProductId=@ProductId";
+            return _db.SaveData(sql, product);
+        }
+
         public Task DeleteProduct(Product product)
         {
             string sql = @"delete from dbo.Product2 
