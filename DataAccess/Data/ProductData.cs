@@ -19,10 +19,16 @@ namespace DataAccess.Data
             string sql = "select * from dbo.Product2";
             return _db.LoadData<Product, dynamic>(sql, new { });
         }
-        public Task InsertMember(Product product)
+        public Task InsertProduct(Product product)
         {
             string sql = @"insert into dbo.Product2 (ProductImg, ProductName, ProductDesc, ProductPrice) 
                           values (@ProductImg, @ProductName, @ProductDesc, @ProductPrice);";
+            return _db.SaveData(sql, product);
+        }
+        public Task DeleteProduct(Product product)
+        {
+            string sql = @"delete from dbo.Product2 
+                          where ProductName = @ProductName";
             return _db.SaveData(sql, product);
         }
     }
