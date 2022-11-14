@@ -2,19 +2,19 @@
 
 @using DataAccess.Data
 @using Web_Project.DataModels
+@using Microsoft.AspNetCore.Components
 
 @inject ProductData _db
-
-<h1>Productedit</h1>
-<h3>Current Product</h3>
+@inject IMatDialogService MatDialogService
+<h1>Current Product</h1>
 <div class="form-inline">
 	<label class="sr-only" for="filter-name">Filter</label>
 	<input type="text" class="form-control mb-2 mr-sm-2"
-	       placeholder="Filter by name" />
+	       placeholder="Filter by name"/>
 	<button type="button" class="btn btn-primary mr-sm-2 mb-2">Filter</button>
-	<button type="button" class="btn btn-danger  mb-2">Clear</button>
+	<button type="button" class="btn btn-danger  mb-2">Clear</button> 
 </div>
-@if (product is null)
+@if (products is null)
 {
 	<p><em>Loading...</em></p>
 }
@@ -23,30 +23,81 @@ else
 	<table class="table table-striped">
 		<thead>
 			<tr>
+				<th>Product Id</th>
+				<th>Product Image</th>
 				<th>Product Name</th>
+				<th>Product Description</th>
+				<th>Product Price</th>
+				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>
+			@foreach (var product in products)
+			{
 			<tr>
-				<td>"Tools"</td>
+				<td>@product.ProductId</td>
+				<td>@product.ProductImg</td>
+				<td>@product.ProductName</td>
+				<td>@product.ProductDesc</td>
+				<td>@string.Format("฿{0:f2}",@product.ProductPrice)</td>
 				<td>
-					<MatButton>Edit</MatButton>
-				</td>
-				<td>
-					<MatButton>Delete</MatButton>
+					<MatIconButton Icon="build" @bind-value="@product.ProductId" @onclick="() => GetProductById(product.ProductId)"></MatIconButton>
+					<MatDialog @bind-IsOpen="@dialogIsOpen">
+						<MatDialogTitle>Hi</MatDialogTitle>
+							<MatDialogContent>
+								<p>Edit Product</p>
+									<MatTextField Label="Product ID" @bind-Value="@product.ProductId"></MatTextField>
+									<MatTextField Label="Product Image"@bind-Value="@product.ProductImg"></MatTextField>
+									<MatTextField Label="Product Name" @bind-Value="@product.ProductName"></MatTextField>
+									<MatTextField Label="Product Description"@bind-Value="@product.ProductDesc"></MatTextField>
+									<MatTextField Label="Product Price"@bind-Value="@product.ProductPrice"></MatTextField>
+							</MatDialogContent>
+							<MatDialogActions>
+									<MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
+									<MatButton OnClick="@OkClick">Save</MatButton>
+							</MatDialogActions>
+					</MatDialog>
+					<MatIconButton Icon="delete" OnClick="@(_ => OpenConfirmFromService())"></MatIconButton>
 				</td>
 			</tr>
+		}
 		</tbody>
 	</table>
 }
-
 @code {
-	private List<Product> product;
+	bool dialogIsOpen = false;
+	private List<Product> products;
 
 	protected override async Task OnInitializedAsync()
 	{
-		product = await _db.GetProduct();
+		products = await _db.GetProduct();
 	}
 
+	protected async Task GetProductById(int ProductId)
+	{
+		products = await _db.GetProductById(ProductId);
+		dialogIsOpen = true;
+	}
+
+	//private void UpdateProduct(Product product)
+	//{
+	//	products = _db.UpdateProduct(product);
+	//}
+
+    void OkClick()
+    {
+        dialogIsOpen = false;
+		OnInitializedAsync();
+    }
+
+    void OpenDialog()
+    {
+        dialogIsOpen = true;
+    }
+
+    async Task OpenConfirmFromService()
+    {
+        await MatDialogService.ConfirmAsync("Are you sure to delete this?");
+    }
 
 }

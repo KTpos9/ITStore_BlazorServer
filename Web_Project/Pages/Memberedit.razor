@@ -4,17 +4,18 @@
 @using Web_Project.DataModels
 
 @inject MemberData _db
+@inject IMatDialogService MatDialogService
 
 <h1>Memberedit</h1>
 <h3>Current Member</h3>
 <div class="form-inline">
 	<label class="sr-only" for="filter-name">Filter</label>
 	<input type="text" class="form-control mb-2 mr-sm-2"
-	       placeholder="Filter by name" />
+	       placeholder="Filter by name"/>
 	<button type="button" class="btn btn-primary mr-sm-2 mb-2">Filter</button>
 	<button type="button" class="btn btn-danger  mb-2">Clear test</button> 
 </div>
-@if (member is null)
+@if (members is null)
 {
 	<p><em>Loading...</em></p>
 }
@@ -23,31 +24,58 @@ else
 	<table class="table table-striped">
 		<thead>
 			<tr>
-				<th>First Name</th>
-				<th>Last Name</th>
+				<th>Member Id</th>
+				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>
+			@foreach (var member in members)
+			{
 			<tr>
-				<td>"Pakawat"</td>
-				<td>"Srithong"</td>
+				<td>@member.MemberId</td>
 				<td>
-					<MatButton>Edit</MatButton>
-				</td>
-				<td>
-					<MatButton>Delete</MatButton>
+					<MatIconButton Icon="build"></MatIconButton>
+					<MatDialog @bind-IsOpen="@dialogIsOpen">
+						<MatDialogTitle>Hi</MatDialogTitle>
+							<MatDialogContent>
+								<p>Edit Product</p>
+									<MatTextField Label="Product ID" @bind-Value="@member.MemberId"></MatTextField>
+							</MatDialogContent>
+							<MatDialogActions>
+									<MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
+									<MatButton OnClick="@OkClick">Save</MatButton>
+							</MatDialogActions>
+					</MatDialog>
+					<MatIconButton Icon="delete" OnClick="@(_ => OpenConfirmFromService())"></MatIconButton>
 				</td>
 			</tr>
+		}
 		</tbody>
 	</table>
 }
 
 @code {
-	private List<Member> member;
+	bool dialogIsOpen = false;
+
+	private List<Member> members;
 
 	protected override async Task OnInitializedAsync()
 	{
-		member = await _db.GetMember();
+		members = await _db.GetMember();
 	}
+    void OkClick()
+    {
+        dialogIsOpen = false;
+		OnInitializedAsync();
+    }
 
+    void OpenDialog()
+    {
+        dialogIsOpen = true;
+    }
+
+    async Task OpenConfirmFromService()
+    {
+        await MatDialogService.ConfirmAsync("Are you sure you want to delete this?");
+    }
 }
