@@ -7,11 +7,13 @@
 }
 .grid_wrapper {
     display: grid;
+    row-gap: 2rem;
 }
 .two_column_grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 3rem;
+    row-gap: 2rem;
 }
 
 li{
