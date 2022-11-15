@@ -10,23 +10,12 @@
     <EditForm OnValidSubmit="@InsertMember" style="width:22rem" EditContext="@EC">
         <DataAnnotationsValidator />
         <ValidationSummary />
-      <!-- Email input -->
-      @*<div class="form-outline mb-4">
-        <input type="email" id="form2Example1" class="form-control" />
-        <label class="form-label" for="form2Example1">Email address</label>
-      </div>*@
+
       <MatThemeProvider Theme=@theme1>
             <MatTextField @bind-Value="@newMember.Email" Label="Email" FullWidth="true" Class="mb-4 mt-4"></MatTextField>
             <MatTextField @bind-Value="@newMember.Password" Label="Password" FullWidth="true" Class="mb-4 mt-4" Type="password"></MatTextField>
             <MatTextField @bind-Value="@newMember.ConfirmPassword" Label="Confirm Password" FullWidth="true" Class="mb-4" Type="password"></MatTextField>
       </MatThemeProvider>
-
-      <!-- Password input -->
-      @*<div class="form-outline mb-4">
-        <input type="password" id="form2Example2" class="form-control" />
-        <label class="form-label" for="form2Example2">Password</label>
-      </div>*@
-      
 
       <!-- Submit button -->
       <button type="submit" class="btn btn-primary btn-block mb-4" @onclick=SignIn disabled="@(!context.Validate())">Register</button>
