@@ -1,4 +1,5 @@
 ﻿@inject CartData _db
+@inject IMatToaster Toaster
 
 <li style="list-style: none;">
   <article style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
@@ -7,8 +8,8 @@
         <div class="card-body">
           <h5 class="card-title">@title</h5>
           <p class="card-text">@desc</p>
-          <p class="card-text">@btnText $</p>
-          <a href="@btnHref" class="btn btn-primary" @onclick="AddToCart">
+          <p class="card-text">@string.Format("฿{0:f2}",btnText)</p>
+          <a class="btn btn-primary" @onclick="AddToCart">
               <i class="oi oi-cart"></i>  Add to cart
           </a>
         </div>
@@ -33,10 +34,13 @@
 
     private async Task AddToCart()
     {
-        //Cart cart = new Cart
-        //{
-
-        //};
-        //await _db.InsertCart(cart);
+        Cart cart = new Cart
+        {
+            ProductImg = src,
+            ProductName = title,
+            ProductPrice = float.Parse(btnText)
+        };
+        await _db.InsertCart(cart);
+        Toaster.Add("Item added to cart",MatToastType.Success);
     }
 }
