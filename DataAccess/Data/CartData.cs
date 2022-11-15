@@ -25,5 +25,11 @@ namespace DataAccess.Data
                           values (@ProductImg, @ProductName, @ProductPrice);";
             return _db.SaveData(sql, cart);
         }
+        public Task DeleteCartByID(int id)
+        {
+            string sql = @"delete from dbo.Cart2
+                           where CartID = @CartID";
+            return _db.SaveData(sql,new { CartID = id });
+        }
     }
 }
