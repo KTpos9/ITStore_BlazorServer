@@ -19,11 +19,11 @@ namespace DataAccess.Data
             string sql = "select * from dbo.Product2";
             return _db.LoadData<Product, dynamic>(sql, new { });
         }
-        public Task InsertProduct(Product product)
+        public Task InsertProduct(Product newProduct)
         {
             string sql = @"insert into dbo.Product2 (ProductImg, ProductName, ProductDesc, ProductPrice) 
-                          values (@ProductImg, @ProductName, @ProductDesc, @ProductPrice);";
-            return _db.SaveData(sql, product);
+                          values (@Img, @Name, @Desc, @Price);";
+            return _db.SaveData(sql, new { Img = newProduct.ProductImg, Name = newProduct.ProductName, Desc = newProduct.ProductDesc, Price = newProduct.ProductPrice });
         }
 
         public Task<List<Product>> GetProductById(int ProductId)
@@ -38,11 +38,11 @@ namespace DataAccess.Data
             return _db.SaveData(sql, product);
         }
 
-        public Task DeleteProduct(Product product)
+        public Task DeleteProduct(int ProductId)
         {
             string sql = @"delete from dbo.Product2 
-                          where ProductName = @ProductName";
-            return _db.SaveData(sql, product);
+                          where ProductId = @Id";
+            return _db.SaveData(sql, new { Id= ProductId});
         }
     }
 }
