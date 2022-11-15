@@ -1,0 +1,29 @@
+﻿@inject CartData _cartDb
+
+<tr>
+    <td style="width:20%">
+        <img src="@CartImg"class="w-50 img-thumbnail"><img/>
+    </td>
+    <td>@CartName</td>
+    <td>@CartPrice</td>
+    <td>0</td>
+    <td><button class="btn btn-danger" @onclick=DeleteItemAsync>Delete</button></td>
+</tr>
+@code {
+    [Parameter]
+    public string CartID { get; set; }
+    [Parameter]
+    public string CartImg { get; set; }
+    [Parameter]
+    public string CartName { get; set; }
+    [Parameter]
+    public float CartPrice { get; set; }
+    [Parameter]
+    public EventCallback OnDelete{ get; set; }
+
+    private async Task DeleteItemAsync()
+    {
+        _cartDb.DeleteCartByID(int.Parse(CartID));
+        OnDelete.InvokeAsync();
+    }
+}
