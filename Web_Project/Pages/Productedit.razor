@@ -7,6 +7,20 @@
 @inject ProductData _db
 @inject IMatDialogService MatDialogService
 <h1>Current Product</h1>
+<MatButton Icon="note_add" OnClick="@OpenAddDialog">Add new product</MatButton>
+	<MatDialog @bind-IsOpen="@dialogAddIsOpen">
+		<MatDialogContent>
+			<p>Insert Product</p>
+				<MatTextField Label="Product Image" @bind-Value="@newproduct.ProductImg"></MatTextField>
+				<MatTextField Label="Product Name" @bind-Value="@newproduct.ProductName"></MatTextField>
+				<MatTextField Label="Product Description"@bind-Value="@newproduct.ProductDesc"></MatTextField>
+				<MatTextField Label="Product Price"@bind-Value="@newproduct.ProductPrice"></MatTextField>
+		</MatDialogContent>
+		<MatDialogActions>
+			<MatButton OnClick="@(e => { dialogAddIsOpen = false; })">Cancel</MatButton>
+			<MatButton OnClick="@(_ => InsertProduct())">Insert</MatButton>
+		</MatDialogActions>
+	</MatDialog>
 <div class="form-inline">
 	<label class="sr-only" for="filter-name">Filter</label>
 	<input type="text" class="form-control mb-2 mr-sm-2"
@@ -42,7 +56,7 @@ else
 				<td>@string.Format("฿{0:f2}",@product.ProductPrice)</td>
 				<td>
 					<MatIconButton Icon="build" @bind-value="@product.ProductId" @onclick="() => GetProductById(product.ProductId)"></MatIconButton>
-					<MatDialog @bind-IsOpen="@dialogIsOpen">
+					<MatDialog @bind-IsOpen="@dialogEditIsOpen">
 						<MatDialogTitle>Hi</MatDialogTitle>
 							<MatDialogContent>
 								<p>Edit Product</p>
@@ -53,51 +67,71 @@ else
 									<MatTextField Label="Product Price"@bind-Value="@product.ProductPrice"></MatTextField>
 							</MatDialogContent>
 							<MatDialogActions>
-									<MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
-									<MatButton OnClick="@OkClick">Save</MatButton>
+									<MatButton OnClick="@(e => { dialogEditIsOpen = false; })">Cancel</MatButton>
+									<MatButton @onclick="() => UpdateProduct(product)">Save</MatButton>
 							</MatDialogActions>
 					</MatDialog>
-					<MatIconButton Icon="delete" OnClick="@(_ => OpenConfirmFromService())"></MatIconButton>
+					<MatIconButton Icon="delete" @bind-value="@product.ProductId" @onclick="() => DeleteProduct(product.ProductId)"></MatIconButton>
 				</td>
 			</tr>
-		}
+		    }
 		</tbody>
 	</table>
 }
 @code {
-	bool dialogIsOpen = false;
+	bool dialogAddIsOpen = false;
+	bool dialogEditIsOpen = false;
 	private List<Product> products;
+
+	private Product newproduct = new Product();
 
 	protected override async Task OnInitializedAsync()
 	{
 		products = await _db.GetProduct();
 	}
-
 	protected async Task GetProductById(int ProductId)
 	{
 		products = await _db.GetProductById(ProductId);
-		dialogIsOpen = true;
+		dialogEditIsOpen = true;
 	}
 
-	//private void UpdateProduct(Product product)
-	//{
-	//	products = _db.UpdateProduct(product);
-	//}
+	private async Task InsertProduct()
+	{
+		var newProduct = new Product();
+		dialogAddIsOpen = false;
+		await _db.InsertProduct(newproduct);
 
-    void OkClick()
-    {
-        dialogIsOpen = false;
 		OnInitializedAsync();
-    }
+	}
 
-    void OpenDialog()
-    {
-        dialogIsOpen = true;
-    }
+	private async Task DeleteProduct(int ProductId)
+	{
+		//await _db.DeleteProduct(ProductId);
 
-    async Task OpenConfirmFromService()
-    {
-        await MatDialogService.ConfirmAsync("Are you sure to delete this?");
-    }
+		//OnInitializedAsync();
+	}
 
+	private async Task UpdateProduct(Product product)
+	{
+		await _db.UpdateProduct(product);
+		dialogEditIsOpen = false;
+
+		OnInitializedAsync();
+	}
+
+	void OkClick()
+	{
+		dialogEditIsOpen = false;
+		OnInitializedAsync();
+	}
+
+	void OpenAddDialog()
+	{
+		dialogAddIsOpen = true;
+	}
+
+	void OpenEditDialog()
+	{
+		dialogEditIsOpen = true;
+	}
 }
