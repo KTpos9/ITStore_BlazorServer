@@ -3,3 +3,29 @@
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
 }
+.grid_wrapper {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    grid-template-areas:
+        "d a"
+        "d b"
+        "d c";
+    grid-auto-columns: 1fr;
+    grid-template-columns: 1.5fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    row-gap: 2em;
+}
+.img_grid{
+    grid-area:d;
+}
+.img_grid2 {
+    grid-area: a;
+}
+.img_grid3 {
+    grid-area: b;
+}
+.img_grid4 {
+    grid-area: c;
+}
+
