@@ -4,6 +4,7 @@ using MatBlazor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Web_Project.Data;
+using Web_Project.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,15 @@ builder.Services.AddTransient<MemberData>();
 builder.Services.AddTransient<ProductData>();
 builder.Services.AddTransient<CartData>();
 builder.Services.AddMatBlazor();
+builder.Services.AddMatToaster(config =>
+{
+    config.Position = MatToastPosition.TopCenter;
+    config.PreventDuplicates = true;
+    config.NewestOnTop = true;
+    config.ShowCloseButton = true;
+    config.MaximumOpacity = 95;
+    config.VisibleStateDuration = 1000;
+});
 
 var app = builder.Build();
 
