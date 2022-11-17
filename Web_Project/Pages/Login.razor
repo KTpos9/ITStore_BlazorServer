@@ -1,5 +1,11 @@
 @page "/login"
+@using Web_Project.Authentication;
 @layout ShopLayout
+
+@inject MemberData _MemberDb
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+@inject IJSRuntime js
 <PageTitle>Login</PageTitle>
 
 <section>
@@ -11,8 +17,8 @@
         <label class="form-label" for="form2Example1">Email address</label>
       </div>*@
       <MatThemeProvider Theme=@theme1>
-          <MatTextField @bind-Value="@Email" Label="Email" FullWidth="true" Class="mb-4 mt-4"></MatTextField>
-          <MatTextField @bind-Value="@Email" Label="Password" FullWidth="true" Class="mb-4 mt-4"></MatTextField>
+          <MatTextField @bind-Value="@loginMember.Email" Label="Email" FullWidth="true" Class="mb-4 mt-4"></MatTextField>
+          <MatTextField @bind-Value="@loginMember.Password" Label="Password" FullWidth="true" Class="mb-4 mt-4" Type="password"></MatTextField>
       </MatThemeProvider>
       
 
@@ -40,7 +46,7 @@
       </div>
 
       <!-- Submit button -->
-      <button type="button" class="btn btn-primary btn-block mb-4">Sign in</button>
+      <button type="button" class="btn btn-primary btn-block mb-4" @onclick="Authenticate">Sign in</button>
 
       <!-- Register buttons -->
       <div class="text-center">
@@ -66,9 +72,28 @@
 </section>
 
 @code {
-    private string Email;
+    MemberLoginModel loginMember = new MemberLoginModel();
+
     MatTheme theme1 = new MatTheme
     {
         Primary = MatThemeColors.Blue.A400.Value
     };
+
+    private async Task Authenticate()
+    {
+        var memberAccount = await _MemberDb.GetMemberByEmail(loginMember.Email);
+        if(memberAccount == null || memberAccount.Password != loginMember.Password)
+        {
+            await js.InvokeVoidAsync("alert", "Invalid Email or Password");
+            return;
+        }
+        var custonAuthStateProvider = (CustomAuthProvider)authStateProvider;
+        await custonAuthStateProvider.UpdateAuthenticationStateAsync(new UserSession
+            {
+                Email = memberAccount.Email,
+                FirstName = memberAccount.FirstName,
+                Role = memberAccount.Role
+            });
+        navManager.NavigateTo("/", true);
+    }
 }
