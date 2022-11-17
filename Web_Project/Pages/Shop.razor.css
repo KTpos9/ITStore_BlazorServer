@@ -5,8 +5,8 @@
 }
 .grid_wrapper {
     display: grid;
-    place-items: center;
-    align-content: center;
+/*    place-items: center;
+    align-content: center;*/
     grid-template-areas:
         "d a"
         "d b"
@@ -14,7 +14,11 @@
     grid-auto-columns: 1fr;
     grid-template-columns: 1.5fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    row-gap: 2em;
+}
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .img_grid{
     grid-area:d;
