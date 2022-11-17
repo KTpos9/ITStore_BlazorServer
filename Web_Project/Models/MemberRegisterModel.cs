@@ -2,7 +2,7 @@
 
 namespace Web_Project.Models
 {
-    public class DisplayMemberModel
+    public class MemberRegisterModel
     {
         [Required]
         public string Name { get; set; }
