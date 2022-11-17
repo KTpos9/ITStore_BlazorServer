@@ -2,7 +2,10 @@ using DataAccess;
 using DataAccess.Data;
 using MatBlazor;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
+using Web_Project.Authentication;
 using Web_Project.Data;
 using Web_Project.Models;
 
@@ -11,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthProvider>();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<SqlDataAccess>();
 builder.Services.AddTransient<MemberData>();
