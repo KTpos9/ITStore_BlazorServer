@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using System.Reflection.Metadata;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 
@@ -30,6 +31,15 @@ namespace DataAccess
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 await connection.ExecuteAsync(sql, parameter);
+            }
+        }
+        public async Task<T> LoadSingleData<T,U>(string sql, U parameter)
+        {
+            string connectionString = _config.GetConnectionString(ConnectionStringName);
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var data = await connection.QueryFirstOrDefaultAsync<T>(sql, parameter);
+                return data;
             }
         }
     }
