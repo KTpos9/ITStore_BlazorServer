@@ -6,31 +6,33 @@
 <PageTitle>Shop</PageTitle>
 <h3>Shop</h3>
 <div class="grid_wrapper m-5">
-    <div id="carouselExampleIndicators" class="carousel slide my-5 img_grid" data-bs-ride="carousel" style="max-width:670px;max-height:492px;">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <div class="item img_grid">
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="max-width:670px;max-height:492px;">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://www.jib.co.th/img_master/banner/original/20221114142532_1.jpg?v=34211668410745" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://www.jib.co.th/img_master/banner/original/20221115111613_1.jpg?v=34231668492662" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://www.jib.co.th/img_master/banner/original/20220202114230_1.jpg?v=22551668162078" class="d-block w-100" alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="https://www.jib.co.th/img_master/banner/original/20221114142532_1.jpg?v=34211668410745" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-                <img src="https://www.jib.co.th/img_master/banner/original/20221115111613_1.jpg?v=34231668492662" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-                <img src="https://www.jib.co.th/img_master/banner/original/20220202114230_1.jpg?v=22551668162078" class="d-block w-100" alt="...">
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
     </div>
     <div class="img_grid2 d-block">
         <img src="https://www.jib.co.th/img_master/banner/original/20220614093602_1.jpg?v=24981663558026" class="img-fluid" />
@@ -108,6 +110,8 @@ else
 
 @code {
     private List<Product> products;
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
     protected override async Task OnInitializedAsync()
     {
         products = await _db.GetProduct();
