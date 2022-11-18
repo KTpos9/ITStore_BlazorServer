@@ -62,7 +62,7 @@ else
 									<MatTextField Label="Product Price"@bind-Value="@product.ProductPrice"></MatTextField>
 							</MatDialogContent>
 							<MatDialogActions>
-									<MatButton OnClick="@(e => { dialogEditIsOpen = false; })">Cancel</MatButton>
+									<MatButton OnClick="@OkClick">Cancel</MatButton>
 									<MatButton @onclick="() => UpdateProduct(product)">Save</MatButton>
 							</MatDialogActions>
 					</MatDialog>
@@ -128,6 +128,7 @@ else
 	void OkClick()
 	{
 		dialogEditIsOpen = false;
+
 		Rerender();
 	}
 

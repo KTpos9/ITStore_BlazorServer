@@ -31,22 +31,22 @@ namespace DataAccess.Data
             return _db.LoadSingleData<Member, dynamic>(sql, new { Email = email });
         }
 
-        public Task<Member> GetMemberById(int Id)
+        public Task<List<Member>> GetMemberById(int Id)
         {
-            string sql = "select * from dbo.Member2 where MemberId=@Id";
-            return _db.LoadSingleData<Member, dynamic>(sql, new { Id = Id });
+            string sql = @"select * from dbo.Member2 where MemberId=@Id";
+            return _db.LoadData<Member, dynamic>(sql, new { Id = Id });
         }
 
         public Task UpdateMember(Member member)
         {
-            string sql = @"update dbo.Member2 set FirstName=@FristName, LastName=@LastName, Email=@Email, Role=@Role where MemberId=@MemberId";
+            string sql = @"update dbo.Member2 set FirstName=@FirstName, LastName=@LastName, Email=@Email, Role=@Role where MemberId=@MemberId";
             return _db.SaveData(sql, member);
         }
 
         public Task DeleteMember(int Id)
         {
             string sql = @"delete from dbo.Member2 
-                          where ProductId = @Id";
+                          where MemberId = @Id";
             return _db.SaveData(sql, new { Id = Id });
         }
     }
