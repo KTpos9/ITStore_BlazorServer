@@ -12,6 +12,8 @@
         <ValidationSummary />
 
       <MatThemeProvider Theme=@theme1>
+            <MatTextField @bind-Value="@newMember.Name" Label="First Name" FullWidth="true" Class="mb-4 mt-4"></MatTextField>
+            <MatTextField @bind-Value="@newMember.LastName" Label="Last Name" FullWidth="true" Class="mb-4 mt-4"></MatTextField>
             <MatTextField @bind-Value="@newMember.Email" Label="Email" FullWidth="true" Class="mb-4 mt-4"></MatTextField>
             <MatTextField @bind-Value="@newMember.Password" Label="Password" FullWidth="true" Class="mb-4 mt-4" Type="password"></MatTextField>
             <MatTextField @bind-Value="@newMember.ConfirmPassword" Label="Confirm Password" FullWidth="true" Class="mb-4" Type="password"></MatTextField>
@@ -38,7 +40,11 @@
     {
         Member m = new Member
         {
-
+            FirstName = newMember.Name,
+            LastName = newMember.LastName,
+            Email = newMember.Email,
+            Password = newMember.Password,
+            Role = "User"
         };
         await _db.InsertMember(m);
     }
