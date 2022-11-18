@@ -1,5 +1,6 @@
 ﻿@page "/cart"
 @inject CartData _cartDb
+@inject NavigationManager navManager
 
 @if(cartItems is null)
 {
@@ -104,7 +105,7 @@ else
                             </div>
                             <div class="row">
                                 <span class="text-muted certificate-text"><i class="fa fa-lock"></i> Your transaction is secured with ssl certificate</span>
-                                <button class="btn btn-primary mt-3 mb-3">Checkout</button>
+                                <button class="btn btn-primary mt-3 mb-3" @onclick="Checkout">Checkout</button>
                             </div>
                         </div>
                     </div>
@@ -139,5 +140,9 @@ else
     private async Task Rerender()
     {
         cartItems = await _cartDb.GetCart();
+    }
+    private void Checkout()
+    {
+        navManager.NavigateTo("/orderRecived",true);
     }
 }
