@@ -26,10 +26,10 @@ namespace DataAccess.Data
             return _db.SaveData(sql, new { Img = newProduct.ProductImg, Name = newProduct.ProductName, Desc = newProduct.ProductDesc, Price = newProduct.ProductPrice });
         }
 
-        public Task<List<Product>> GetProductById(int ProductId)
+        public Task<List<Product>> GetProductById(int Id)
         {
             string sql = @"select * from dbo.Product2 where ProductId=@Id";
-            return _db.LoadData<Product, dynamic>(sql, new { Id = ProductId });
+            return _db.LoadData<Product, dynamic>(sql, new { Id = Id });
         }
 
         public Task UpdateProduct(Product product)
@@ -38,11 +38,11 @@ namespace DataAccess.Data
             return _db.SaveData(sql, product);
         }
 
-        public Task DeleteProduct(int ProductId)
+        public Task DeleteProduct(int Id)
         {
             string sql = @"delete from dbo.Product2 
                           where ProductId = @Id";
-            return _db.SaveData(sql, new { Id= ProductId});
+            return _db.SaveData(sql, new { Id= Id});
         }
     }
 }
