@@ -27,9 +27,9 @@ namespace DataAccess.Data
         }
 
         public Task<List<Product>> GetProductById(int ProductId)
-        { 
+        {
             string sql = @"select * from dbo.Product2 where ProductId=@Id";
-            return _db.LoadData<Product, dynamic>(sql, new {  Id=ProductId});
+            return _db.LoadData<Product, dynamic>(sql, new { Id = ProductId });
         }
 
         public Task UpdateProduct(Product product)

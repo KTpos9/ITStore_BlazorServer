@@ -4,8 +4,11 @@
 @using Web_Project.DataModels
 @using Microsoft.AspNetCore.Components
 
+@inject AuthenticationStateProvider authStateProvider
 @inject ProductData _db
 @inject IMatDialogService MatDialogService
+
+<AuthorizeView Roles="Administrator">
 <h1>Current Product</h1>
 <MatButton Icon="note_add" OnClick="@OpenAddDialog">Add new product</MatButton>
 	<MatDialog @bind-IsOpen="@dialogAddIsOpen">
@@ -21,13 +24,6 @@
 			<MatButton OnClick="@(_ => InsertProduct())">Insert</MatButton>
 		</MatDialogActions>
 	</MatDialog>
-<div class="form-inline">
-	<label class="sr-only" for="filter-name">Filter</label>
-	<input type="text" class="form-control mb-2 mr-sm-2"
-	       placeholder="Filter by name"/>
-	<button type="button" class="btn btn-primary mr-sm-2 mb-2">Filter</button>
-	<button type="button" class="btn btn-danger  mb-2">Clear</button> 
-</div>
 @if (products is null)
 {
 	<p><em>Loading...</em></p>
@@ -78,6 +74,7 @@ else
 		</tbody>
 	</table>
 }
+</AuthorizeView>
 @code {
 	bool dialogAddIsOpen = false;
 	bool dialogEditIsOpen = false;
@@ -89,7 +86,7 @@ else
 	{
 		products = await _db.GetProduct();
 	}
-	protected async Task GetProductById(int ProductId)
+	private async Task GetProductById(int ProductId)
 	{
 		products = await _db.GetProductById(ProductId);
 		dialogEditIsOpen = true;
@@ -101,14 +98,14 @@ else
 		dialogAddIsOpen = false;
 		await _db.InsertProduct(newproduct);
 
-		OnInitializedAsync();
+		Rerender();
 	}
 
-	private async Task DeleteProduct(int ProductId)
+	private async Task DeleteProduct(int Id)
 	{
-		//await _db.DeleteProduct(ProductId);
+		//await _db.DeleteProduct(Id);
 
-		//OnInitializedAsync();
+		//Rerender();
 	}
 
 	private async Task UpdateProduct(Product product)
@@ -116,13 +113,13 @@ else
 		await _db.UpdateProduct(product);
 		dialogEditIsOpen = false;
 
-		OnInitializedAsync();
+		Rerender();
 	}
 
 	void OkClick()
 	{
 		dialogEditIsOpen = false;
-		OnInitializedAsync();
+		Rerender();
 	}
 
 	void OpenAddDialog()
@@ -134,4 +131,9 @@ else
 	{
 		dialogEditIsOpen = true;
 	}
+
+	private async Task Rerender()
+    {
+        products = await _db.GetProduct();
+    }
 }

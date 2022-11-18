@@ -30,5 +30,24 @@ namespace DataAccess.Data
             string sql = "select * from dbo.Member2 where Email=@Email";
             return _db.LoadSingleData<Member, dynamic>(sql, new { Email = email });
         }
+
+        public Task<Member> GetMemberById(int Id)
+        {
+            string sql = "select * from dbo.Member2 where MemberId=@Id";
+            return _db.LoadSingleData<Member, dynamic>(sql, new { Id = Id });
+        }
+
+        public Task UpdateMember(Member member)
+        {
+            string sql = @"update dbo.Member2 set FirstName=@FristName, LastName=@LastName, Email=@Email, Role=@Role where MemberId=@MemberId";
+            return _db.SaveData(sql, member);
+        }
+
+        public Task DeleteMember(int Id)
+        {
+            string sql = @"delete from dbo.Member2 
+                          where ProductId = @Id";
+            return _db.SaveData(sql, new { Id = Id });
+        }
     }
 }
