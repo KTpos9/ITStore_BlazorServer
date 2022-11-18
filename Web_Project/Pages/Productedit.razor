@@ -9,8 +9,10 @@
 @inject IMatDialogService MatDialogService
 
 <AuthorizeView Roles="Administrator">
-<h1>Current Product</h1>
+	<Authorized>
+<h1>Product Edit</h1>
 <MatButton Icon="note_add" OnClick="@OpenAddDialog">Add new product</MatButton>
+<h2>Current Product</h2>
 	<MatDialog @bind-IsOpen="@dialogAddIsOpen">
 		<MatDialogContent>
 			<p>Insert Product</p>
@@ -33,7 +35,6 @@ else
 	<table class="table table-striped">
 		<thead>
 			<tr>
-				<th>Product Id</th>
 				<th>Product Image</th>
 				<th>Product Name</th>
 				<th>Product Description</th>
@@ -45,7 +46,6 @@ else
 			@foreach (var product in products)
 			{
 			<tr>
-				<td>@product.ProductId</td>
 				<td>@product.ProductImg</td>
 				<td>@product.ProductName</td>
 				<td>@product.ProductDesc</td>
@@ -53,10 +53,9 @@ else
 				<td>
 					<MatIconButton Icon="build" @bind-value="@product.ProductId" @onclick="() => GetProductById(product.ProductId)"></MatIconButton>
 					<MatDialog @bind-IsOpen="@dialogEditIsOpen">
-						<MatDialogTitle>Hi</MatDialogTitle>
+						<MatDialogTitle>Edit Product</MatDialogTitle>
 							<MatDialogContent>
 								<p>Edit Product</p>
-									<MatTextField Label="Product ID" @bind-Value="@product.ProductId"></MatTextField>
 									<MatTextField Label="Product Image"@bind-Value="@product.ProductImg"></MatTextField>
 									<MatTextField Label="Product Name" @bind-Value="@product.ProductName"></MatTextField>
 									<MatTextField Label="Product Description"@bind-Value="@product.ProductDesc"></MatTextField>
@@ -67,17 +66,26 @@ else
 									<MatButton @onclick="() => UpdateProduct(product)">Save</MatButton>
 							</MatDialogActions>
 					</MatDialog>
-					<MatIconButton Icon="delete" @bind-value="@product.ProductId" @onclick="() => DeleteProduct(product.ProductId)"></MatIconButton>
+					<MatIconButton Icon="delete" @bind-value="@product.ProductId" @onclick="() => OpenDelDialog()"></MatIconButton>
+					<MatDialog @bind-IsOpen="@dialogDelIsOpen">
+						<MatDialogTitle>Confirm Delete</MatDialogTitle>
+							<MatDialogActions>
+									<MatButton OnClick="@(e => { dialogDelIsOpen = false; })">Cancel</MatButton>
+									<MatButton @onclick="() => DeleteProduct(product.ProductId)">Confirm</MatButton>
+							</MatDialogActions>
+					</MatDialog>
 				</td>
 			</tr>
 		    }
 		</tbody>
 	</table>
 }
+	</Authorized>
 </AuthorizeView>
 @code {
 	bool dialogAddIsOpen = false;
 	bool dialogEditIsOpen = false;
+	bool dialogDelIsOpen = false;
 	private List<Product> products;
 
 	private Product newproduct = new Product();
@@ -103,9 +111,10 @@ else
 
 	private async Task DeleteProduct(int Id)
 	{
-		//await _db.DeleteProduct(Id);
+		await _db.DeleteProduct(Id);
+		dialogDelIsOpen = false;
 
-		//Rerender();
+		Rerender();
 	}
 
 	private async Task UpdateProduct(Product product)
@@ -130,6 +139,11 @@ else
 	void OpenEditDialog()
 	{
 		dialogEditIsOpen = true;
+	}
+
+	void OpenDelDialog()
+	{
+		dialogDelIsOpen = true;
 	}
 
 	private async Task Rerender()
