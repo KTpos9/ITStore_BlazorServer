@@ -53,7 +53,6 @@ else
 				<td>
 					<MatIconButton Icon="build" @bind-value="@product.ProductId" @onclick="() => GetProductById(product.ProductId)"></MatIconButton>
 					<MatDialog @bind-IsOpen="@dialogEditIsOpen">
-						<MatDialogTitle>Edit Product</MatDialogTitle>
 							<MatDialogContent>
 								<p>Edit Product</p>
 									<MatTextField Label="Product Image"@bind-Value="@product.ProductImg"></MatTextField>
@@ -62,7 +61,7 @@ else
 									<MatTextField Label="Product Price"@bind-Value="@product.ProductPrice"></MatTextField>
 							</MatDialogContent>
 							<MatDialogActions>
-									<MatButton OnClick="@(e => { dialogEditIsOpen = false; })">Cancel</MatButton>
+									<MatButton OnClick="@OkClick">Cancel</MatButton>
 									<MatButton @onclick="() => UpdateProduct(product)">Save</MatButton>
 							</MatDialogActions>
 					</MatDialog>
@@ -128,6 +127,7 @@ else
 	void OkClick()
 	{
 		dialogEditIsOpen = false;
+
 		Rerender();
 	}
 
