@@ -3,25 +3,29 @@
 @using DataAccess.Data
 @using Web_Project.DataModels
 
+@inject AuthenticationStateProvider authStateProvider
 @inject MemberData _db
 @inject IMatDialogService MatDialogService
 
-<h1>Memberedit</h1>
-<MatButton Icon="note_add" OnClick="@OpenAddDialog">Add new product</MatButton>
+<AuthorizeView Roles="Administrator">
+	<Authorized>
+<h1>Member Edit</h1>
+<MatButton Icon="note_add" OnClick="@OpenAddDialog">Add new member</MatButton>
+<h2>Current Member</h2>
 	<MatDialog @bind-IsOpen="@dialogAddIsOpen">
 		<MatDialogContent>
 			<p>Insert Member</p>
 				<MatTextField Label="First Name" @bind-Value="@newmember.FirstName"></MatTextField>
 				<MatTextField Label="LastName" @bind-Value="@newmember.LastName"></MatTextField>
 				<MatTextField Label="Email" @bind-Value="@newmember.Email"></MatTextField>
-				<MatSelectValue @bind-Value="@newmember.Role" Items="@memberRoles" ValueSelector=@(i=>i.ToString())></MatSelectValue>
+				<MatTextField Label="Password" @bind-Value="@newmember.Password"></MatTextField>
+				<MatSelectItem Label="Role" @bind-Value="@newmember.Role" Items="@memberRoles"></MatSelectItem>
 		</MatDialogContent>
 		<MatDialogActions>
 			<MatButton OnClick="@(e => { dialogAddIsOpen = false; })">Cancel</MatButton>
 			<MatButton OnClick="@(_ => InsertMember())">Insert</MatButton>
 		</MatDialogActions>
 	</MatDialog>
-<h3>Current Member</h3>
 @if (members is null)
 {
 	<p><em>Loading...</em></p>
@@ -31,10 +35,10 @@ else
 	<table class="table table-striped">
 		<thead>
 			<tr>
-				<th>Member Id</th>
 				<th>First Name</th>
 				<th>Last Name</th>
 				<th>Email</th>
+				<th>Password</th>
 				<th>Role</th>
 				<th>Actions</th>
 			</tr>
@@ -43,39 +47,48 @@ else
 			@foreach (var member in members)
 			{
 			<tr>
-				<td>@member.MemberId</td>
 				<td>@member.FirstName</td>
 				<td>@member.LastName</td>
 				<td>@member.Email</td>
+				<td>@member.Password</td>
 				<td>@member.Role</td>
 				<td>
-					<MatIconButton Icon="build"></MatIconButton>
+					<MatIconButton Icon="build" @bind-value="@member.MemberId" @onclick="() => GetMemberById(member.MemberId)"></MatIconButton>
 					<MatDialog @bind-IsOpen="@dialogEditIsOpen">
-						<MatDialogTitle>Hi</MatDialogTitle>
 							<MatDialogContent>
-								<p>Edit Product</p>
+								<p>Edit Member</p>
 									<MatTextField Label="Member ID" @bind-Value="@member.MemberId"></MatTextField>
 									<MatTextField Label="First Name" @bind-Value="@member.FirstName"></MatTextField>
 									<MatTextField Label="LastName" @bind-Value="@member.LastName"></MatTextField>
 									<MatTextField Label="Email" @bind-Value="@member.Email"></MatTextField>
-									<MatSelectValue @bind-Value="@member.Role" Items="@memberRoles" ValueSelector=@(i=>i.ToString())></MatSelectValue>
+									<MatTextField Label="Password" @bind-Value="@member.Password"></MatTextField>
+									<MatSelectItem Label="Role" @bind-Value="@member.Role" Items="@memberRoles"></MatSelectItem>
 							</MatDialogContent>
 							<MatDialogActions>
-									<MatButton OnClick="@(e => { dialogEditIsOpen = false; })">Cancel</MatButton>
-									<MatButton OnClick="@OkClick">Save</MatButton>
+									<MatButton OnClick="@OkClick">Cancel</MatButton>
+									<MatButton @onclick="() => UpdateMember(member)">Save</MatButton>
 							</MatDialogActions>
 					</MatDialog>
-					<MatIconButton Icon="delete"></MatIconButton>
+					<MatIconButton Icon="delete" @bind-value="@member.MemberId" @onclick="() => OpenDelDialog()"></MatIconButton>
+					<MatDialog @bind-IsOpen="@dialogDelIsOpen">
+						<MatDialogTitle>Confirm Delete</MatDialogTitle>
+							<MatDialogActions>
+									<MatButton OnClick="@(e => { dialogDelIsOpen = false; })">Cancel</MatButton>
+									<MatButton @onclick="() => DeleteMember(member.MemberId)">Confirm</MatButton>
+							</MatDialogActions>
+					</MatDialog>
 				</td>
 			</tr>
 		}
 		</tbody>
 	</table>
 }
-
+	</Authorized>
+</AuthorizeView>
 @code {
 	bool dialogAddIsOpen = false;
 	bool dialogEditIsOpen = false;
+	bool dialogDelIsOpen = false;
 	private List<Member> members;
 
 	private Member newmember = new Member();
@@ -85,9 +98,9 @@ else
 		members = await _db.GetMember();
 	}
 
-	protected async Task GetMemberById(int Id)
+	private async Task GetMemberById(int Id)
 	{
-		await _db.GetMemberById(Id);
+		members = await _db.GetMemberById(Id);
 		dialogEditIsOpen = true;
 	}
 
@@ -102,9 +115,10 @@ else
 
 	private async Task DeleteMember(int Id)
 	{
-		//await _db.DeleteProduct(Id);
+		await _db.DeleteMember(Id);
+		dialogDelIsOpen = false;
 
-		//Rerender();
+		Rerender();
 	}
 
 	private async Task UpdateMember(Member member)
@@ -131,10 +145,15 @@ else
 		dialogEditIsOpen = true;
 	}
 
+	void OpenDelDialog()
+	{
+		dialogDelIsOpen = true;
+	}
+
 	string[] memberRoles = new[]
             {
-                "admin",
-                "user",
+                "Administrator",
+                "User",
             };
 
 	private async Task Rerender()
