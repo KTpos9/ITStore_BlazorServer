@@ -6,6 +6,7 @@ namespace Web_Project.Models
     {
         [Required]
         public string Name { get; set; }
+        [Required]
         public string LastName { get; set; }
         [Required]
         [EmailAddress]
