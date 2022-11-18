@@ -7,14 +7,21 @@
 @inject IMatDialogService MatDialogService
 
 <h1>Memberedit</h1>
+<MatButton Icon="note_add" OnClick="@OpenAddDialog">Add new product</MatButton>
+	<MatDialog @bind-IsOpen="@dialogAddIsOpen">
+		<MatDialogContent>
+			<p>Insert Member</p>
+				<MatTextField Label="First Name" @bind-Value="@newmember.FirstName"></MatTextField>
+				<MatTextField Label="LastName" @bind-Value="@newmember.LastName"></MatTextField>
+				<MatTextField Label="Email" @bind-Value="@newmember.Email"></MatTextField>
+				<MatSelectValue @bind-Value="@newmember.Role" Items="@memberRoles" ValueSelector=@(i=>i.ToString())></MatSelectValue>
+		</MatDialogContent>
+		<MatDialogActions>
+			<MatButton OnClick="@(e => { dialogAddIsOpen = false; })">Cancel</MatButton>
+			<MatButton OnClick="@(_ => InsertMember())">Insert</MatButton>
+		</MatDialogActions>
+	</MatDialog>
 <h3>Current Member</h3>
-<div class="form-inline">
-	<label class="sr-only" for="filter-name">Filter</label>
-	<input type="text" class="form-control mb-2 mr-sm-2"
-	       placeholder="Filter by name"/>
-	<button type="button" class="btn btn-primary mr-sm-2 mb-2">Filter</button>
-	<button type="button" class="btn btn-danger  mb-2">Clear test</button> 
-</div>
 @if (members is null)
 {
 	<p><em>Loading...</em></p>
@@ -25,6 +32,10 @@ else
 		<thead>
 			<tr>
 				<th>Member Id</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Email</th>
+				<th>Role</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -33,20 +44,28 @@ else
 			{
 			<tr>
 				<td>@member.MemberId</td>
+				<td>@member.FirstName</td>
+				<td>@member.LastName</td>
+				<td>@member.Email</td>
+				<td>@member.Role</td>
 				<td>
 					<MatIconButton Icon="build"></MatIconButton>
-					<MatDialog @bind-IsOpen="@dialogIsOpen">
+					<MatDialog @bind-IsOpen="@dialogEditIsOpen">
 						<MatDialogTitle>Hi</MatDialogTitle>
 							<MatDialogContent>
 								<p>Edit Product</p>
-									<MatTextField Label="Product ID" @bind-Value="@member.MemberId"></MatTextField>
+									<MatTextField Label="Member ID" @bind-Value="@member.MemberId"></MatTextField>
+									<MatTextField Label="First Name" @bind-Value="@member.FirstName"></MatTextField>
+									<MatTextField Label="LastName" @bind-Value="@member.LastName"></MatTextField>
+									<MatTextField Label="Email" @bind-Value="@member.Email"></MatTextField>
+									<MatSelectValue @bind-Value="@member.Role" Items="@memberRoles" ValueSelector=@(i=>i.ToString())></MatSelectValue>
 							</MatDialogContent>
 							<MatDialogActions>
-									<MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
+									<MatButton OnClick="@(e => { dialogEditIsOpen = false; })">Cancel</MatButton>
 									<MatButton OnClick="@OkClick">Save</MatButton>
 							</MatDialogActions>
 					</MatDialog>
-					<MatIconButton Icon="delete" OnClick="@(_ => OpenConfirmFromService())"></MatIconButton>
+					<MatIconButton Icon="delete"></MatIconButton>
 				</td>
 			</tr>
 		}
@@ -55,27 +74,71 @@ else
 }
 
 @code {
-	bool dialogIsOpen = false;
-
+	bool dialogAddIsOpen = false;
+	bool dialogEditIsOpen = false;
 	private List<Member> members;
+
+	private Member newmember = new Member();
 
 	protected override async Task OnInitializedAsync()
 	{
 		members = await _db.GetMember();
 	}
-    void OkClick()
-    {
-        dialogIsOpen = false;
-		OnInitializedAsync();
-    }
 
-    void OpenDialog()
-    {
-        dialogIsOpen = true;
-    }
+	protected async Task GetMemberById(int Id)
+	{
+		await _db.GetMemberById(Id);
+		dialogEditIsOpen = true;
+	}
 
-    async Task OpenConfirmFromService()
+	private async Task InsertMember()
+	{
+		var newMember = new Member();
+		dialogAddIsOpen = false;
+		await _db.InsertMember(newmember);
+
+		Rerender();
+	}
+
+	private async Task DeleteMember(int Id)
+	{
+		//await _db.DeleteProduct(Id);
+
+		//Rerender();
+	}
+
+	private async Task UpdateMember(Member member)
+	{
+		await _db.UpdateMember(member);
+		dialogEditIsOpen = false;
+
+		Rerender();
+	}
+
+	void OkClick()
+	{
+		dialogEditIsOpen = false;
+		Rerender();
+	}
+
+	void OpenAddDialog()
+	{
+		dialogAddIsOpen = true;
+	}
+
+	void OpenEditDialog()
+	{
+		dialogEditIsOpen = true;
+	}
+
+	string[] memberRoles = new[]
+            {
+                "admin",
+                "user",
+            };
+
+	private async Task Rerender()
     {
-        await MatDialogService.ConfirmAsync("Are you sure you want to delete this?");
+        members = await _db.GetMember();
     }
 }
