@@ -2,7 +2,7 @@ section{
     display: grid;
     place-items: center;
     align-content: center;
-    min-height: 100vh;
+    min-height: 70vh;
 }
 form {
     width: 22rem;
