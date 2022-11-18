@@ -1,0 +1,12 @@
+﻿@page "/orderRecived"
+@inject NavigationManager navManager
+
+<div class="d-flex m-5 flex-column">
+	<h3>Your Order have been Recived</h3>
+	<button class="btn btn-primary" @onclick="ReturnHome" >Return to home page</button>
+</div>
+
+
+@code {
+    private void ReturnHome() => navManager.NavigateTo(("/"), true);
+}
