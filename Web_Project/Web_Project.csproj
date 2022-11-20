@@ -17,8 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BoldReports.Net.Core" Version="4.2.60" />
     <PackageReference Include="bootstrap" Version="5.2.2" />
     <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.11" />
   </ItemGroup>
 
   <ItemGroup>

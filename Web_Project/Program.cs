@@ -34,6 +34,8 @@ builder.Services.AddMatToaster(config =>
 
 var app = builder.Build();
 
+// register syncfusion license
+Bold.Licensing.BoldLicenseProvider.RegisterLicense("fpK4+uy+fl9xLzVuYDYDew9RExnvKpYLMMtYYvwLHU8=");
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -46,6 +48,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+app.MapControllers();
 app.UseRouting();
 
 app.MapBlazorHub();

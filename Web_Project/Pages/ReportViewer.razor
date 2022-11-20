@@ -1,0 +1,24 @@
+﻿@page "/reportviewer"
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components
+@using Web_Project.Models
+
+@inject IJSRuntime JSRuntime
+<h3 class="my-5">ReportViewer</h3>
+
+<div id="report-viewer" style="height: 100vh;"></div>
+@code {
+    ReportOptions viewerOptions = new();
+
+    public async void RenderReportViewer()
+    {
+        viewerOptions.ReportName = "ProductReport";
+        viewerOptions.ServiceURL = "api/Report";
+        await JSRuntime.InvokeVoidAsync("BoldReports.RenderViewer", "report-viewer", viewerOptions);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        RenderReportViewer();
+    }
+}
