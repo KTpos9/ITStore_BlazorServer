@@ -29,7 +29,7 @@ builder.Services.AddMatToaster(config =>
     config.NewestOnTop = true;
     config.ShowCloseButton = true;
     config.MaximumOpacity = 95;
-    config.VisibleStateDuration = 1000;
+    config.VisibleStateDuration = 700;
 });
 
 var app = builder.Build();
