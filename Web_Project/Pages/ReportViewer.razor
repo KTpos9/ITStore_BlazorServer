@@ -5,14 +5,20 @@
 
 @inject IJSRuntime JSRuntime
 <h3 class="my-5">ReportViewer</h3>
-
+<div>
+    <MatSelect Label="Reports" ValueChanged="(string i) =>OnSelectedReportChange(i)">
+        <MatOptionString></MatOptionString>
+        <MatOptionString Value="ProductReport">Products</MatOptionString>
+        <MatOptionString Value="OrderReport">Orders</MatOptionString>
+        @*<MatOptionString Value="fruit">Fruit</MatOptionString>*@
+    </MatSelect>
+</div>
 <div id="report-viewer" style="height: 100vh;"></div>
 @code {
     ReportOptions viewerOptions = new();
-
     public async void RenderReportViewer()
     {
-        viewerOptions.ReportName = "ProductReport";
+        viewerOptions.ReportName = "OrderReport";
         viewerOptions.ServiceURL = "api/Report";
         await JSRuntime.InvokeVoidAsync("BoldReports.RenderViewer", "report-viewer", viewerOptions);
     }
@@ -20,5 +26,15 @@
     protected override void OnAfterRender(bool firstRender)
     {
         RenderReportViewer();
+    }
+    public async void RenderReportViewer(string ReportName)
+    {
+        viewerOptions.ReportName = ReportName;
+        viewerOptions.ServiceURL = "api/Report";
+        await JSRuntime.InvokeVoidAsync("BoldReports.RenderViewer", "report-viewer", viewerOptions);
+    }
+    private async void OnSelectedReportChange(string name)
+    {
+        RenderReportViewer(name);
     }
 }
