@@ -26,7 +26,7 @@ else
                     {
                         <Table_Row CartID =@Convert.ToString(items.CartID)
                         CartImg=@items.ProductImg
-                        CartName=@items.ProductName
+                        CartName=items.ProductName
                         CartPrice=@items.ProductPrice
                         OnDelete="Rerender"></Table_Row>
                     }
@@ -43,9 +43,9 @@ else
                         <li>Final price</li>
                     </ul>
                     <ul class="text-decoration-none">
-                        <li>@string.Format("฿{0:f2}",cartItems.Sum(item => item.ProductPrice))</li>
-                        <li>@string.Format("฿{0:f2}",0)</li>
-                        <li>@string.Format("฿{0:f2}",cartItems.Sum(item => item.ProductPrice))</li>
+                        <li>@string.Format("฿{0:n2}",cartItems.Sum(item => item.ProductPrice))</li>
+                        <li>@string.Format("฿{0:n2}",0)</li>
+                        <li>@string.Format("฿{0:n2}",cartItems.Sum(item => item.ProductPrice))</li>
                     </ul>
                 </div>
             </div>
@@ -56,8 +56,17 @@ else
             </div>
 
             <div class="two_column_grid">
-                <div class="d-flex">
-                    
+                <div class="d-flex flex-column">
+                    <div class="d=flex flex-row">
+                        <input class="form-control mx-3" placeholder="Address">
+                    </div>
+                    <div class="d=flex flex-row">
+                        <input class="form-control mx-3" placeholder="District">
+                        <input class="form-control mx-3" placeholder="Province">
+                    </div>
+                    <div class="d=flex flex-row">
+                        <input class="form-control mx-3" placeholder="Postal Code">
+                    </div>
                 </div>
             </div>
 
