@@ -5,7 +5,7 @@
         <img src="@CartImg"class="w-50 img-thumbnail"><img/>
     </td>
     <td>@CartName</td>
-    <td>@CartPrice</td>
+    <td>@string.Format("฿{0:n2}",CartPrice)</td>
     <td>0</td>
     <td><button class="btn btn-danger" @onclick=DeleteItemAsync>Delete</button></td>
 </tr>

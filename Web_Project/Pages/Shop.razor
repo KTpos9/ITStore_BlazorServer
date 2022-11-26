@@ -1,5 +1,4 @@
 ﻿@page "/"
-@layout ShopLayout
 
 @inject ProductData _db
 
@@ -58,7 +57,7 @@ else
             <ProductCard src="@product.ProductImg" 
             title="@product.ProductName" 
             desc="@product.ProductDesc"
-            btnText="@Convert.ToString(product.ProductPrice)" 
+            Price="@product.ProductPrice" 
             btnHref="counter"
             aHref="counter"></ProductCard>
         }

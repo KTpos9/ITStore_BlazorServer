@@ -8,7 +8,7 @@
         <div class="card-body">
           <h5 class="card-title">@title</h5>
           <p class="card-text">@desc</p>
-          <p class="card-text">@string.Format("฿{0:f2}",btnText)</p>
+          <p class="card-text">@string.Format("฿{0:n}",Price)</p>
           <a class="btn btn-primary" @onclick="AddToCart">
               <i class="oi oi-cart"></i>  Add to cart
           </a>
@@ -26,7 +26,7 @@
     [Parameter]
     public string desc{ get; set; }
     [Parameter]
-    public string btnText{ get; set; }
+    public float Price{ get; set; }
     [Parameter]
     public string btnHref{ get; set; }
     [Parameter]
@@ -38,7 +38,7 @@
         {
             ProductImg = src,
             ProductName = title,
-            ProductPrice = float.Parse(btnText)
+            ProductPrice = Price
         };
         await _db.InsertCart(cart);
         Toaster.Add("Item added to cart",MatToastType.Success);
