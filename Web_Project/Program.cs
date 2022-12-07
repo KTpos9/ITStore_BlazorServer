@@ -21,6 +21,7 @@ builder.Services.AddTransient<SqlDataAccess>();
 builder.Services.AddTransient<MemberData>();
 builder.Services.AddTransient<ProductData>();
 builder.Services.AddTransient<CartData>();
+builder.Services.AddTransient<OrderData>();
 builder.Services.AddMatBlazor();
 builder.Services.AddMatToaster(config =>
 {

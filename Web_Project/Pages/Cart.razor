@@ -1,6 +1,7 @@
 ﻿@page "/cart"
 @inject CartData _cartDb
 @inject NavigationManager navManager
+@inject OrderData _orderDb 
 
 @if(cartItems is null)
 {
@@ -161,7 +162,7 @@ else
     {
         cartItems = await _cartDb.GetCart();
     }
-    private void Checkout()
+    private async void Checkout()
     {
         navManager.NavigateTo("/orderRecived",true);
     }

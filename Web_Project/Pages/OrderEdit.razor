@@ -1,0 +1,152 @@
+@page "/orderedit"
+
+@using DataAccess.Data
+@using Web_Project.DataModels
+@using Microsoft.AspNetCore.Components
+
+@inject AuthenticationStateProvider authStateProvider
+@inject OrderData _db
+@inject IMatDialogService MatDialogService
+
+<AuthorizeView Roles="Administrator">
+	<Authorized>
+<h1>Order Edit</h1>
+<h2>Current Order</h2>
+	<MatDialog @bind-IsOpen="@dialogAddIsOpen">
+		<MatDialogContent>
+			<p>Insert Product</p>
+				<MatTextField Label="Product Image" @bind-Value="@newproduct.ProductImg"></MatTextField>
+				<MatTextField Label="Product Name" @bind-Value="@newproduct.ProductName"></MatTextField>
+				<MatTextField Label="Product Description"@bind-Value="@newproduct.ProductDesc"></MatTextField>
+				<MatTextField Label="Product Price"@bind-Value="@newproduct.ProductPrice"></MatTextField>
+		</MatDialogContent>
+		<MatDialogActions>
+			<MatButton OnClick="@(e => { dialogAddIsOpen = false; })">Cancel</MatButton>
+			<MatButton OnClick="@(_ => InsertProduct())">Insert</MatButton>
+		</MatDialogActions>
+	</MatDialog>
+@if (order is null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Product Image</th>
+				<th>Product Name</th>
+				<th>Product Description</th>
+				<th>Product Price</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var orders in order)
+			{
+			<tr>
+				<td>@orders.ProductImg</td>
+				<td>@orders.ProductName</td>
+				<td>@orders.OrderDate</td>
+				<td>@string.Format("฿{0:f2}",@orders.ProductPrice)</td>
+				<td>
+					<MatIconButton Icon="build" @bind-value="@orders.OrderID" @onclick="() => GetProductById(orders.OrderID)"></MatIconButton>
+					<MatDialog @bind-IsOpen="@dialogEditIsOpen">
+						<MatDialogTitle>Edit Product</MatDialogTitle>
+							<MatDialogContent>
+								<p>Edit Product</p>
+									<MatTextField Label="Product Image"@bind-Value="@orders.ProductImg"></MatTextField>
+									<MatTextField Label="Product Name" @bind-Value="@orders.ProductName"></MatTextField>
+									<MatTextField Label="Product Price"@bind-Value="@orders.ProductPrice"></MatTextField>
+							</MatDialogContent>
+							<MatDialogActions>
+									<MatButton OnClick="@OkClick">Cancel</MatButton>
+									<MatButton @onclick="() => UpdateOrder(orders)">Save</MatButton>
+							</MatDialogActions>
+					</MatDialog>
+					<MatIconButton Icon="delete" @bind-value="@orders.OrderID" @onclick="() => OpenDelDialog()"></MatIconButton>
+					<MatDialog @bind-IsOpen="@dialogDelIsOpen">
+						<MatDialogTitle>Confirm Delete</MatDialogTitle>
+							<MatDialogActions>
+									<MatButton OnClick="@(e => { dialogDelIsOpen = false; })">Cancel</MatButton>
+									<MatButton @onclick="() => DeleteProduct(orders.OrderID)">Confirm</MatButton>
+							</MatDialogActions>
+					</MatDialog>
+				</td>
+			</tr>
+		    }
+		</tbody>
+	</table>
+}
+	</Authorized>
+</AuthorizeView>
+@code {
+	bool dialogAddIsOpen = false;
+	bool dialogEditIsOpen = false;
+	bool dialogDelIsOpen = false;
+	private List<Order> order;
+
+	private Product newproduct = new Product();
+
+	protected override async Task OnInitializedAsync()
+	{
+		order = await _db.GetOrder();
+	}
+	private async Task GetProductById(int ProductId)
+	{
+		order = await _db.GetOrderById(ProductId);
+		dialogEditIsOpen = true;
+	}
+
+	private async Task InsertProduct()
+	{
+		var newOrder = new Order();
+		dialogAddIsOpen = false;
+		await _db.InsertOrder(newOrder);
+
+		Rerender();
+	}
+
+	private async Task DeleteProduct(int Id)
+	{
+		await _db.DeleteProduct(Id);
+		dialogDelIsOpen = false;
+
+		Rerender();
+	}
+
+	private async Task UpdateOrder(Order order)
+	{
+		await _db.UpdateOrder(order);
+		dialogEditIsOpen = false;
+
+		Rerender();
+	}
+
+	void OkClick()
+	{
+		dialogEditIsOpen = false;
+
+		Rerender();
+	}
+
+	void OpenAddDialog()
+	{
+		dialogAddIsOpen = true;
+	}
+
+	void OpenEditDialog()
+	{
+		dialogEditIsOpen = true;
+	}
+
+	void OpenDelDialog()
+	{
+		dialogDelIsOpen = true;
+	}
+
+	private async Task Rerender()
+    {
+        order = await _db.GetOrder();
+    }
+}
